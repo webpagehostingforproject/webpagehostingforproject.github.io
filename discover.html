@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>LitScape - Discover</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+<style>
+
+        body {
+                  padding-bottom: 80px; /* ensures space above the fixed bottom nav */
+                }
+
+        /* Dark Mode */
+        .dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .dark-mode .bg-light {
+            background-color: #2d2d2d !important;
+        }
+
+        .dark-mode .text-dark {
+            color: #ffffff !important;
+        }
+
+        .dark-mode .modal-content {
+            background-color: #2d2d2d;
+        }
+
+        .dark-mode .list-group-item {
+            background-color: #3d3d3d;
+            color: #ffffff;
+            border-color: #4d4d4d;
+        }
+
+        /* User Profile System */
+        .user-profile {
+            position: fixed;
+            z-index: 1000;
+            left: 20px;
+        }
+
+        .user-profile.mobile {
+            top: 20px;
+        }
+
+        .user-profile.desktop {
+            bottom: 80px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+            background: #0d6efd;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .user-profile.desktop { display: none; }
+            .user-profile.mobile { display: block; }
+        }
+
+        @media (min-width: 769px) {
+            .user-profile.mobile { display: none; }
+            .user-profile.desktop { display: block; }
+        }
+        .book-card img {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .tag-bubble {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: white;
+            margin-right: 5px;
+        }
+        .genre-tag {
+            background-color: #17a2b8;
+        }
+        .language-tag {
+            background-color: #ffc107;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 56px;
+            z-index: 999;
+        }
+        .bottom-nav a {
+            color: #111;
+            font-size: 1.2rem;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+        .bottom-nav a:hover{
+        transform: translateY(-2px);
+        color:#0d6efd;
+        }
+        .bottom-nav a.active {
+            font-weight: 600;
+            color: rgba(0,150,150);
+            font-size:1.1rem;
+
+        }
+        .bottom-nav a.active:hover{
+        transform: translateY(0px);
+
+            color: rgba(0,150,150);
+
+        }
+
+    </style>
+</head>
+<body class="bg-light text-dark">
+<nav class="navbar navbar-expand-lg">
+<div class="container-fluid">
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+<li class="nav-item"><a class="nav-link" href="books.html">Books</a></li>
+<li class="nav-item"><a class="nav-link active" href="discover.html">Discover</a></li>
+<li class="nav-item"><a class="nav-link" href="stats.html">Stats</a></li>
+<li class="nav-item"><a class="nav-link" href="community.html">Community</a></li>
+</ul>
+</div>
+</div>
+</nav>
+<div class="container py-4">
+<h2 class="text-center">Discover New Books</h2>
+<div class="d-flex justify-content-end align-items-center mt-3">
+<label class="me-2" for="tagFilter">Filter by tag:</label>
+<select class="form-select w-auto" id="tagFilter" onchange="filterBooks()">
+<option value="">All</option>
+<option value="Fantasy">Fantasy</option>
+<option value="Thriller">Thriller</option>
+<option value="Romance">Romance</option>
+<option value="History">History</option>
+<option value="Spirituality">Spirituality</option>
+<option value="Science Fiction">Science Fiction</option>
+<option value="Memoir">Memoir</option>
+<option value="English">English</option>
+<option value="Spanish">Spanish</option>
+<option value="French">French</option>
+<option value="German">German</option>
+<option value="Japanese">Japanese</option>
+<option value="Portuguese">Portuguese</option>
+</select>
+</div>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-3">
+<!-- Book Card Example -->
+<div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Circe" src="https://covers.openlibrary.org/b/id/10560965-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Circe</h5>
+<p class="card-text">Madeline Miller</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Fantasy</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Circe')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Circe')">Add to shelf</button>
+</div>
+</div>
+</div>
+<!-- Repeat similarly structured book cards -->
+<div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Alchemist" src="https://covers.openlibrary.org/b/id/8231994-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Alchemist</h5>
+<p class="card-text">Paulo Coelho</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Philosophical</span>
+<span class="tag-bubble language-tag">Portuguese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Alchemist')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Alchemist')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Sapiens" src="https://covers.openlibrary.org/b/id/10514778-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Sapiens</h5>
+<p class="card-text">Yuval Noah Harari</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">History</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Sapiens')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Sapiens')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Educated" src="https://covers.openlibrary.org/b/id/9257290-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Educated</h5>
+<p class="card-text">Tara Westover</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Memoir</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Educated')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Educated')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Midnight Library" src="https://covers.openlibrary.org/b/id/11114247-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Midnight Library</h5>
+<p class="card-text">Matt Haig</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Fiction</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Midnight Library')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Midnight Library')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Becoming" src="https://covers.openlibrary.org/b/id/9254301-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Becoming</h5>
+<p class="card-text">Michelle Obama</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Biography</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Becoming')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Becoming')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Silent Patient" src="https://covers.openlibrary.org/b/id/9251962-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Silent Patient</h5>
+<p class="card-text">Alex Michaelides</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Silent Patient')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Silent Patient')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Song of Achilles" src="https://covers.openlibrary.org/b/id/8281994-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Song of Achilles</h5>
+<p class="card-text">Madeline Miller</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Historical</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Song of Achilles')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Song of Achilles')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Norwegian Wood" src="https://covers.openlibrary.org/b/id/8228785-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Norwegian Wood</h5>
+<p class="card-text">Haruki Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">Japanese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Norwegian Wood')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Norwegian Wood')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Book Thief" src="https://covers.openlibrary.org/b/id/8235116-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Book Thief</h5>
+<p class="card-text">Markus Zusak</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Historical</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Book Thief')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Book Thief')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Four Agreements" src="https://covers.openlibrary.org/b/id/5546156-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Four Agreements</h5>
+<p class="card-text">Don Miguel Ruiz</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Spirituality</span>
+<span class="tag-bubble language-tag">Spanish</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Four Agreements')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Four Agreements')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Power of Now" src="https://covers.openlibrary.org/b/id/8108000-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Power of Now</h5>
+<p class="card-text">Colleen Hoover</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">German</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Power of Now')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Power of Now')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Hobbit" src="https://covers.openlibrary.org/b/id/8108001-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Hobbit</h5>
+<p class="card-text">Various Authors</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Hobbit')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Hobbit')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Brave New World" src="https://covers.openlibrary.org/b/id/8108002-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Brave New World</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">Spanish</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Brave New World')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Brave New World')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Thinking, Fast and Slow" src="https://covers.openlibrary.org/b/id/8108003-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Thinking, Fast and Slow</h5>
+<p class="card-text">Colleen Hoover</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Thinking, Fast and Slow')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Thinking, Fast and Slow')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Little Fires Everywhere" src="https://covers.openlibrary.org/b/id/8108004-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Little Fires Everywhere</h5>
+<p class="card-text">Dan Brown</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">History</span>
+<span class="tag-bubble language-tag">French</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Little Fires Everywhere')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Little Fires Everywhere')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Where the Crawdads Sing" src="https://covers.openlibrary.org/b/id/8108005-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Where the Crawdads Sing</h5>
+<p class="card-text">Various Authors</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Memoir</span>
+<span class="tag-bubble language-tag">German</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Where the Crawdads Sing')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Where the Crawdads Sing')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Kafka on the Shore" src="https://covers.openlibrary.org/b/id/8108006-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Kafka on the Shore</h5>
+<p class="card-text">Colleen Hoover</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Fantasy</span>
+<span class="tag-bubble language-tag">Japanese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Kafka on the Shore')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Kafka on the Shore')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Pachinko" src="https://covers.openlibrary.org/b/id/8108007-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Pachinko</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">Spanish</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Pachinko')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Pachinko')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Road" src="https://covers.openlibrary.org/b/id/8108008-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Road</h5>
+<p class="card-text">Dan Brown</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Road')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Road')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Handmaid's Tale" src="https://covers.openlibrary.org/b/id/8108009-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Handmaid's Tale</h5>
+<p class="card-text">Dan Brown</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Science Fiction</span>
+<span class="tag-bubble language-tag">Japanese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Handmaid's Tale')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Handmaid's Tale')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Subtle Art of Not Giving a F*ck" src="https://covers.openlibrary.org/b/id/8108010-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Subtle Art of Not Giving a F*ck</h5>
+<p class="card-text">Dan Brown</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">History</span>
+<span class="tag-bubble language-tag">Spanish</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Subtle Art of Not Giving a F*ck')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Subtle Art of Not Giving a F*ck')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="A Man Called Ove" src="https://covers.openlibrary.org/b/id/8108011-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">A Man Called Ove</h5>
+<p class="card-text">Colleen Hoover</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">Spanish</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('A Man Called Ove')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('A Man Called Ove')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Giver" src="https://covers.openlibrary.org/b/id/8108012-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Giver</h5>
+<p class="card-text">Neil Gaiman</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">Spanish</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Giver')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Giver')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Anxious People" src="https://covers.openlibrary.org/b/id/8108013-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Anxious People</h5>
+<p class="card-text">Neil Gaiman</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">French</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Anxious People')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Anxious People')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Shadow of the Wind" src="https://covers.openlibrary.org/b/id/8108014-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Shadow of the Wind</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Science Fiction</span>
+<span class="tag-bubble language-tag">French</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Shadow of the Wind')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Shadow of the Wind')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Educated" src="https://covers.openlibrary.org/b/id/8108015-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Educated</h5>
+<p class="card-text">Various Authors</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Thriller</span>
+<span class="tag-bubble language-tag">Japanese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Educated')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Educated')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="A Court of Thorns and Roses" src="https://covers.openlibrary.org/b/id/8108016-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">A Court of Thorns and Roses</h5>
+<p class="card-text">Neil Gaiman</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Memoir</span>
+<span class="tag-bubble language-tag">Portuguese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('A Court of Thorns and Roses')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('A Court of Thorns and Roses')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Goldfinch" src="https://covers.openlibrary.org/b/id/8108017-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Goldfinch</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Fantasy</span>
+<span class="tag-bubble language-tag">German</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Goldfinch')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Goldfinch')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Paris Library" src="https://covers.openlibrary.org/b/id/8108018-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Paris Library</h5>
+<p class="card-text">Various Authors</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Memoir</span>
+<span class="tag-bubble language-tag">Portuguese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Paris Library')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Paris Library')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Henna Artist" src="https://covers.openlibrary.org/b/id/8108019-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Henna Artist</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Henna Artist')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Henna Artist')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="Verity" src="https://covers.openlibrary.org/b/id/8108020-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">Verity</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Memoir</span>
+<span class="tag-bubble language-tag">French</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('Verity')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('Verity')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The House in the Cerulean Sea" src="https://covers.openlibrary.org/b/id/8108021-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The House in the Cerulean Sea</h5>
+<p class="card-text">Various Authors</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">Japanese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The House in the Cerulean Sea')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The House in the Cerulean Sea')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Seven Husbands of Evelyn Hugo" src="https://covers.openlibrary.org/b/id/8108022-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Seven Husbands of Evelyn Hugo</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Fantasy</span>
+<span class="tag-bubble language-tag">Portuguese</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Seven Husbands of Evelyn Hugo')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Seven Husbands of Evelyn Hugo')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The Night Watchman" src="https://covers.openlibrary.org/b/id/8108023-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The Night Watchman</h5>
+<p class="card-text">Murakami</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">English</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The Night Watchman')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The Night Watchman')">Add to shelf</button>
+</div>
+</div>
+</div><div class="col">
+<div class="card book-card shadow-sm">
+<img alt="The 5 AM Club" src="https://covers.openlibrary.org/b/id/8108024-L.jpg"/>
+<div class="card-body">
+<h5 class="card-title">The 5 AM Club</h5>
+<p class="card-text">Various Authors</p>
+<div class="mb-2">
+<span class="tag-bubble genre-tag">Romance</span>
+<span class="tag-bubble language-tag">French</span>
+</div>
+<button class="btn btn-sm btn-outline-primary" onclick="showInfo('The 5 AM Club')">Info</button>
+<button class="btn btn-sm btn-primary" onclick="addToShelf('The 5 AM Club')">Add to shelf</button>
+</div>
+</div>
+</div></div>
+</div>
+<!-- Book Info Modal -->
+<div class="modal fade" id="infoModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Book Information</h5>
+<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<p id="bookInfoContent">Details about the book.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Add to Shelf Modal -->
+<div class="modal fade" id="addModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">Add to Shelf</h5>
+<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<label class="form-label">Select Source of Purchase</label>
+<select class="form-select" id="bookSource">
+<option>Amazon</option>
+<option>Bookstore</option>
+<option>Kindle Store</option>
+<option>Gift</option>
+</select>
+</div>
+<div class="modal-footer">
+<button class="btn btn-primary" onclick="confirmAdd()">Add to Shelf</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h5 class="modal-title">User Profile</h5>
+<button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+</div>
+<div class="modal-body">
+<div class="list-group">
+<a class="list-group-item list-group-item-action" href="#">
+<i class="bi bi-person-circle me-2"></i>My Profile
+                    </a>
+<a class="list-group-item list-group-item-action" href="#">
+<i class="bi bi-gear me-2"></i>Settings
+                    </a>
+<button class="list-group-item list-group-item-action" onclick="toggleDarkMode()">
+<i class="bi bi-moon-stars me-2"></i>Toggle Theme
+                    </button>
+<a class="list-group-item list-group-item-action" href="#">
+<i class="bi bi-info-circle me-2"></i>About
+                    </a>
+<button class="list-group-item list-group-item-action text-danger" onclick="logout()">
+<i class="bi bi-box-arrow-right me-2"></i>Logout
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-nav d-md-none">
+<a href="books.html">
+<i class="bi bi-journal-text"></i>
+<span>Books</span>
+</a>
+<a class="active" href="discover.html">
+<i class="bi bi-stars"></i>
+<span>Discover</span>
+</a>
+<a href="home.html">
+<i class="bi bi-house-door"></i>
+<span>Home</span>
+</a>
+<a href="stats.html">
+<i class="bi bi-bar-chart"></i>
+<span>Stats</span>
+</a>
+<a href="community.html">
+<i class="bi bi-people"></i>
+<span>Community</span>
+</a>
+<a data-bs-target="#profileModal" data-bs-toggle="modal" href="#">
+<i class="bi bi-person-circle" style="font-size:25px"></i>
+</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function filterBooks() {
+    const selected = document.getElementById('tagFilter').value.toLowerCase();
+    document.querySelectorAll('.book-card').forEach(card => {
+        const tags = Array.from(card.querySelectorAll('.tag-bubble')).map(el => el.textContent.toLowerCase());
+        card.closest('.col').style.display = selected === '' || tags.includes(selected) ? 'block' : 'none';
+    });
+}
+</script>
+
+<script>
+    function showInfo(title) {
+        document.getElementById('bookInfoContent').textContent = title + " is an engaging book with fascinating characters and compelling storytelling.";
+        new bootstrap.Modal(document.getElementById('infoModal')).show();
+    }
+
+    let currentBook = '';
+
+    function addToShelf(title) {
+        currentBook = title;
+        new bootstrap.Modal(document.getElementById('addModal')).show();
+    }
+
+    function confirmAdd() {
+        const source = document.getElementById('bookSource').value;
+        alert(currentBook + ' added to shelf from ' + source + '!');
+        bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
+    }
+    // Dark Mode Toggle
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    // Initialize theme
+    if(localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // Logout function
+    function logout() {
+        sessionStorage.removeItem('loggedIn');
+        window.location.href = 'index.html';
+    }
+</script>
+</body>
+</html>
